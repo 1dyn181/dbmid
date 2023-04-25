@@ -1,0 +1,14 @@
+create or replace PROCEDURE update_employee_address(
+    p_employee_id IN employees2.employee_id%TYPE,
+    p_employee_address IN employees2.employee_address%TYPE
+)
+IS
+BEGIN
+    UPDATE employees2 SET employee_address = p_employee_address WHERE employee_id = p_employee_id;
+    
+    IF SQL%ROWCOUNT = 1 THEN
+        DBMS_OUTPUT.PUT_LINE('Address updated successfully for employee ' || p_employee_id);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('No employees found with ID ' || p_employee_id);
+    END IF;
+END;
