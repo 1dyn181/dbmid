@@ -1,0 +1,35 @@
+create or replace trigger tr1
+before insert on orders
+for each row
+declare
+b boolean;
+bill_count integer;
+total integer := 0;
+cursor c is
+select *
+from bill;
+
+cursor c2 is
+select *
+from orders;
+begin
+select count(*) into bill_count from bill;
+b := False;
+for row in c loop
+if row.CUSTOMER_ID = :new.CUSTOMER_ID then
+b := True;
+exit;
+end if;
+end loop;
+
+if b = True then
+update bill set total_amount = total_amount + :new.ORDER_PRICE where CUSTOMER_ID = :new.CUSTOMER_ID;
+else
+for row in c2 loop
+if row.CUSTOMER_ID = :new.CUSTOMER_ID then
+total := total + row.ORDER_PRICE;
+end if;
+end loop;
+insert into bill values(bill_count + 1, :new.CUSTOMER_ID, total + :new.order_price, :new.EMPLOYEE_ID);
+end if;
+end;
