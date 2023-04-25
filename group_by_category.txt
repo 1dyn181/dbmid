@@ -1,0 +1,15 @@
+create or replace PROCEDURE group_by_category
+IS
+BEGIN
+  FOR category_rec IN (SELECT category_id FROM categories)
+  LOOP
+    DBMS_OUTPUT.PUT_LINE('Category ID: ' || category_rec.category_id);
+    FOR product_rec IN (SELECT product_name, product_price
+                        FROM products
+                        WHERE category_id = category_rec.category_id)
+    LOOP
+      DBMS_OUTPUT.PUT_LINE('Product Name: ' || product_rec.product_name ||
+                           ', Price: ' || product_rec.product_price);
+    END LOOP;
+  END LOOP;
+END;
