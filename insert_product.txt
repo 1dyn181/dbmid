@@ -1,0 +1,8 @@
+create or replace TRIGGER insert_product
+BEFORE INSERT ON products
+FOR EACH ROW
+BEGIN
+  IF LENGTH(:NEW.product_name) < 5 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Product name must have at least 5 characters');
+  END IF;
+END;
